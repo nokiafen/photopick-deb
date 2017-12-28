@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/PushSDK/PushSDK.iml" filepath="$PROJECT_DIR$/PushSDK/PushSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PushSDK/PushSDK.iml" filepath="$PROJECT_DIR$/PushSDK/PushSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SipPhone.iml" filepath="$PROJECT_DIR$/SipPhone.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mypicktest/mypicktest.iml" filepath="$PROJECT_DIR$/mypicktest/mypicktest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mypicktest/mypicktest.iml" filepath="$PROJECT_DIR$/mypicktest/mypicktest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photo/photo.iml" filepath="$PROJECT_DIR$/photo/photo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photo/photo.iml" filepath="$PROJECT_DIR$/photo/photo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photopick/photopick.iml" filepath="$PROJECT_DIR$/photopick/photopick.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photopick/photopick.iml" filepath="$PROJECT_DIR$/photopick/photopick.iml" />
+      <module fileurl="file://$PROJECT_DIR$/photopick-4.0.1.iml" filepath="$PROJECT_DIR$/photopick-4.0.1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xutils/xutils.iml" filepath="$PROJECT_DIR$/xutils/xutils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xutils/xutils.iml" filepath="$PROJECT_DIR$/xutils/xutils.iml" />
+    </modules>
+  </component>
+</project>

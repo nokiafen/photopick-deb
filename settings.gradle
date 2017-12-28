@@ -1,0 +1,1 @@
+include ':app', ':photopick', ':mypicktest', ":xutils", ':PushSDK', ':photo'
