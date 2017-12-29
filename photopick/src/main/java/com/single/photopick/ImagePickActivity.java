@@ -34,10 +34,15 @@ public class ImagePickActivity extends AppCompatActivity {
     public String tempDir = "";
     public String tempFile = "";
     public static final String PATH = "PATH";
+    private  boolean  no_crop=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle bundle=getIntent().getExtras();
+        if (bundle!=null&&bundle.containsKey("no_crop")) {
+            no_crop= bundle.getBoolean("no_crop");
+        }
         Window window = getWindow();
         WindowManager.LayoutParams wl = window.getAttributes();
         wl.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
@@ -72,7 +77,11 @@ public class ImagePickActivity extends AppCompatActivity {
                      * 这样的话，我们判断文件的后缀名 如果是图片格式的话，那么才可以
                      */
                     if (path.endsWith("jpg") || path.endsWith("png")) {
-                        startPhotoZoom(Uri.fromFile(new File(path)));
+                        if (!no_crop) {
+                            startPhotoZoom(Uri.fromFile(new File(path)));
+                        }else {//
+                            no_cropBack(path);
+                        }
                     } else {
                         ToastUtil.showToastShort(this, "请选择图片");
                         this.finish();
@@ -87,7 +96,11 @@ public class ImagePickActivity extends AppCompatActivity {
                 this.finish();
             }
         } else if (requestCode == SELECT_BY_CAMERA&&resultCode == Activity.RESULT_OK) {
-            toZoomPic();
+            if (!no_crop) {
+                toZoomPic();
+            }else { //
+            no_cropBack(null);
+            }
         } else if (requestCode == CUT_IMAGE && resultCode == Activity.RESULT_OK) {
             File file = new File(tempFile);
             if (file != null && file.isFile()) {
@@ -102,6 +115,19 @@ public class ImagePickActivity extends AppCompatActivity {
             this.finish();
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void no_cropBack(String path) {
+        File file = new File(path==null?imageFilePath:path);
+        if (file != null && file.isFile()) {
+            Intent intent = new Intent();
+            intent.putExtra(PATH, path==null?imageFilePath:path);
+            setResult(Activity.RESULT_OK, intent);
+            this.finish();
+        } else {
+            ToastUtil.showToastShort(this, "图片加载异常");
+            finish();
+        }
     }
 
     private void toZoomPic() {
@@ -175,7 +201,7 @@ public class ImagePickActivity extends AppCompatActivity {
                     tempFile);
             Uri uricrop = Uri.fromFile(file);
             Intent intent = new Intent("com.android.camera.action.CROP");
-            intent.setDataAndType(uri, "image/*");
+            intent.setDataAndType(uri, "image/*"); //相册图片uri
             intent.putExtra("crop", "true");
             intent.putExtra("aspectX", 1);
             intent.putExtra("aspectY", 1);
@@ -187,7 +213,7 @@ public class ImagePickActivity extends AppCompatActivity {
             intent.putExtra("outputFormat",
                     Bitmap.CompressFormat.JPEG.toString());
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uricrop);
-            intent.putExtra("output", uricrop);
+            intent.putExtra("output", uricrop); //剪切文件输出目录
             startActivityForResult(intent, CUT_IMAGE);
         }
     }

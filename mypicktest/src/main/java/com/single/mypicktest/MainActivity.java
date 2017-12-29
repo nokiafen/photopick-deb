@@ -5,15 +5,19 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.MainThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.single.photopick.ImagePickActivity;
 import com.single.photopick.NetUtil;
 import com.single.photopick.ToastUtil;
@@ -32,16 +36,42 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.reactivex.Observer;
+import io.reactivex.Scheduler;
+import io.reactivex.android.MainThreadDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import me.shaohui.advancedluban.Luban;
+import me.shaohui.advancedluban.OnCompressListener;
+
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
+
 public class MainActivity extends AppCompatActivity {
+
+    private ImageView photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         photo= (ImageView) findViewById(R.id.iv_photo);
+        toPickNoCrop();
     }
 
     public  void toPick(View v){
-        startActivityForResult(new Intent(this, ImagePickActivity.class),ImagePickActivity.PICK_REQUESTCODE);
+//        startActivityForResult(new Intent(this, ImagePickActivity.class),ImagePickActivity.PICK_REQUESTCODE);
+            toPickNoCrop();
+    }
+
+
+    public  void toPickNoCrop(){
+        Intent iItent= new Intent();
+        iItent.setClassName(this,ImagePickActivity.class.getName());
+        Bundle bundle =new Bundle();
+        bundle.putBoolean("no_crop",true);
+        iItent.putExtras(bundle);
+        startActivityForResult(iItent,ImagePickActivity.PICK_REQUESTCODE);
     }
 
 
@@ -49,10 +79,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
        if(requestCode==ImagePickActivity.PICK_REQUESTCODE&&resultCode==Activity.RESULT_OK){
        String path= (String) data.getExtras().get(ImagePickActivity.PATH);
-            Bitmap bmp=  UploadUtil.getTargetBitmap(path,800,800);
            File file=new File(path);
-           compressBmpToFile(bmp,file);
-           uploadFile(file,"http://172.16.227.16:8181/wangxingtong-web/api/image/upload");
+           Luban.compress(this, file)
+                   .setMaxSize(500)                // limit the final image size（unit：Kb）
+                   .setMaxHeight(1920)             // limit image height
+                   .setMaxWidth(1080)              // limit image width
+                   .putGear(Luban.CUSTOM_GEAR)     // use CUSTOM GEAR compression mode
+                   .launch(new OnCompressListener() {
+                       @Override
+                       public void onStart() {
+
+                       }
+
+                       @Override
+                       public void onSuccess(File file) {
+                           Glide.with(MainActivity.this).load(file)
+                                   .apply(bitmapTransform(new BlurTransformation(25)))
+                                   .into(photo);
+                       }
+
+                       @Override
+                       public void onError(Throwable e) {
+
+                       }
+                   });
        }
         super.onActivityResult(requestCode, resultCode, data);
     }
