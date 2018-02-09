@@ -173,7 +173,7 @@ public class ImagePickActivity extends AppCompatActivity {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         } else {
             //兼容android7.0 使用共享文件的形式
-            uri = FileProvider.getUriForFile(this,"photopicktalk.provider", tempFile);//通过FileProvider创建一个content类型的Uri
+            uri = FileProvider.getUriForFile(this,"photopickfire.provider", tempFile);//通过FileProvider创建一个content类型的Uri
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
             List<ResolveInfo> resInfoList = getPackageManager().queryIntentActivities
                     (intent, PackageManager.MATCH_DEFAULT_ONLY);
